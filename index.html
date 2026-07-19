@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Toolkit — 교사 업무·수업 준비 도구 모음</title>
+    <meta name="description" content="승재쌤의 교사 업무·수업 준비를 돕는 웹도구 모음" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f4f6f9;
+        --card: #ffffff;
+        --ink: #1b1d20;
+        --sub: #64748b;
+        --line: #e2e8f0;
+        --brand: #17395c;
+        --accent: #a5372c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Pretendard', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap { max-width: 900px; margin: 0 auto; padding: 56px 20px 40px; }
+      header .kicker {
+        font-size: 13px; font-weight: 800; letter-spacing: 0.14em;
+        color: var(--accent); text-transform: uppercase;
+      }
+      header h1 {
+        font-family: 'Nanum Myeongjo', serif; font-weight: 800;
+        font-size: clamp(28px, 6vw, 42px); margin: 6px 0 8px; color: var(--brand);
+      }
+      header p { color: var(--sub); font-size: 16px; margin: 0 0 6px; line-height: 1.6; }
+      .grid {
+        margin-top: 34px; display: grid; gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      }
+      .tool {
+        display: block; text-decoration: none; color: inherit;
+        background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+        padding: 22px 22px 20px; transition: transform 0.12s, box-shadow 0.12s, border-color 0.12s;
+      }
+      .tool:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(23, 57, 92, 0.12);
+        border-color: #c7d2e0;
+      }
+      .tool .badge {
+        display: inline-block; font-size: 12px; font-weight: 800; color: var(--brand);
+        background: color-mix(in srgb, var(--brand) 9%, white); padding: 3px 9px; border-radius: 999px;
+      }
+      .tool h2 { font-size: 19px; margin: 12px 0 6px; }
+      .tool p { color: var(--sub); font-size: 13.5px; line-height: 1.6; margin: 0; }
+      .tool .go { margin-top: 14px; font-size: 13px; font-weight: 800; color: var(--accent); }
+      .soon {
+        background: repeating-linear-gradient(45deg, #fafbfc 0 10px, #f4f6f9 10px 20px);
+        border-style: dashed; cursor: default;
+      }
+      .soon:hover { transform: none; box-shadow: none; border-color: var(--line); }
+      .soon .badge { color: var(--sub); background: #eef2f6; }
+      footer#app-credit {
+        margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line);
+        text-align: center; color: #94a3b8; font-size: 12.5px; line-height: 1.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="kicker">Teacher Toolkit</div>
+        <h1>교사 업무·수업 준비 도구 모음</h1>
+        <p>승재쌤이 바이브코딩으로 만든, 수업 준비와 업무를 돕는 브라우저 웹도구들입니다.<br />설치 없이 바로 쓰고, 결과물은 A4로 인쇄하거나 PDF로 저장하세요.</p>
+      </header>
+
+      <main class="grid">
+        <a class="tool" href="./worksheet-studio/">
+          <span class="badge">학습지 제작</span>
+          <h2>학습지 스튜디오</h2>
+          <p>수업 내용을 블록으로 조립해 A4 학습지를 만들고, 교사용 원본에서 학생용·정답지를 한 번에 뽑아냅니다. 과학 그래프·입자 모형·힘 화살표 등 과학 전용 시각화 내장.</p>
+          <div class="go">열기 →</div>
+        </a>
+
+        <div class="tool soon">
+          <span class="badge">준비 중</span>
+          <h2>다음 도구</h2>
+          <p>여기에 새 교사 도구가 계속 추가됩니다.</p>
+        </div>
+      </main>
+
+      <footer id="app-credit">
+        © 2026 승재쌤 · Teacher Toolkit<br />
+        최종 업데이트: 2026-07-19
+      </footer>
+    </div>
+  </body>
+</html>
