@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎵 동영상 → MP3 추출기</title>
+<style>
+  :root{
+    --bg:#0f172a; --panel:#1e293b; --panel2:#334155;
+    --accent:#38bdf8; --accent2:#818cf8; --text:#e2e8f0;
+    --muted:#94a3b8; --ok:#4ade80; --border:#475569;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; font-family:"Pretendard","Segoe UI",system-ui,sans-serif;
+    background:linear-gradient(135deg,#0f172a,#1e1b4b); color:var(--text);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .card{
+    width:100%; max-width:620px; background:var(--panel);
+    border:1px solid var(--border); border-radius:20px; padding:32px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45);
+  }
+  h1{margin:0 0 6px; font-size:1.7rem; display:flex; align-items:center; gap:10px;}
+  .sub{color:var(--muted); font-size:.92rem; margin-bottom:24px; line-height:1.5;}
+  .drop{
+    border:2px dashed var(--accent); border-radius:16px; padding:40px 20px;
+    text-align:center; cursor:pointer; transition:.2s; background:rgba(56,189,248,.05);
+  }
+  .drop:hover,.drop.over{background:rgba(56,189,248,.15); border-color:var(--accent2);}
+  .drop .big{font-size:2.6rem; margin-bottom:8px;}
+  .drop .hint{color:var(--muted); font-size:.85rem; margin-top:8px;}
+  #fileInput{display:none;}
+  .fileName{margin:18px 0 6px; font-weight:600; word-break:break-all;}
+  .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:18px 0;}
+  label.opt{font-size:.9rem; color:var(--muted);}
+  select{
+    background:var(--panel2); color:var(--text); border:1px solid var(--border);
+    border-radius:10px; padding:8px 12px; font-size:.9rem;
+  }
+  button{
+    border:none; border-radius:12px; padding:14px 22px; font-size:1rem; font-weight:700;
+    cursor:pointer; transition:.2s; width:100%;
+  }
+  .btn-go{background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#0f172a;}
+  .btn-go:disabled{opacity:.5; cursor:not-allowed;}
+  .btn-dl{background:var(--ok); color:#0f172a; margin-top:14px; text-decoration:none; display:block; text-align:center;}
+  .progress-wrap{margin:22px 0 4px; display:none;}
+  .bar{height:12px; background:var(--panel2); border-radius:8px; overflow:hidden;}
+  .bar > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .2s;}
+  .status{font-size:.85rem; color:var(--muted); margin-top:8px; text-align:center; min-height:1.2em;}
+  .footer{margin-top:26px; text-align:center; font-size:.75rem; color:var(--muted); line-height:1.6;}
+  audio{width:100%; margin-top:16px;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎵 동영상 → MP3 추출기</h1>
+    <p class="sub">동영상 파일에서 소리(오디오)만 뽑아 <b>MP3</b>로 저장합니다.<br>
+      모든 처리는 <b>내 컴퓨터(브라우저) 안에서만</b> 이루어져요. 파일이 인터넷으로 올라가지 않습니다.</p>
+
+    <label class="drop" id="drop">
+      <div class="big">📂</div>
+      <div><b>동영상 파일을 여기에 끌어놓거나 클릭</b></div>
+      <div class="hint">mp4 · mov · avi · mkv · webm · m4v 등</div>
+      <input type="file" id="fileInput" accept="video/*,audio/*">
+    </label>
+
+    <div class="fileName" id="fileName"></div>
+
+    <div class="row" id="optRow" style="display:none;">
+      <label class="opt">음질(비트레이트)</label>
+      <select id="bitrate">
+        <option value="320k">최고 (320 kbps)</option>
+        <option value="192k" selected>높음 (192 kbps)</option>
+        <option value="128k">보통 (128 kbps)</option>
+        <option value="96k">가벼움 (96 kbps)</option>
+      </select>
+    </div>
+
+    <button class="btn-go" id="goBtn" disabled>🎧 MP3로 추출하기</button>
+
+    <div class="progress-wrap" id="progWrap">
+      <div class="bar"><i id="bar"></i></div>
+      <div class="status" id="status">준비 중…</div>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="footer">
+      승재쌤의 과학실 · 오프라인 브라우저 도구<br>
+      <span id="app-credit"></span>
+    </div>
+  </div>
+
+<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+<script>
+  const { createFFmpeg, fetchFile } = FFmpeg;
+  const ffmpeg = createFFmpeg({
+    log: false,
+    corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
+  });
+
+  const drop = document.getElementById('drop');
+  const fileInput = document.getElementById('fileInput');
+  const fileNameEl = document.getElementById('fileName');
+  const optRow = document.getElementById('optRow');
+  const goBtn = document.getElementById('goBtn');
+  const progWrap = document.getElementById('progWrap');
+  const bar = document.getElementById('bar');
+  const statusEl = document.getElementById('status');
+  const result = document.getElementById('result');
+
+  let currentFile = null;
+
+  // 드래그앤드롭
+  ['dragenter','dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave','drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', e => {
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => {
+    if (e.target.files.length) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file){
+    currentFile = file;
+    fileNameEl.textContent = '📄 ' + file.name + '  (' + (file.size/1048576).toFixed(1) + ' MB)';
+    optRow.style.display = 'flex';
+    goBtn.disabled = false;
+    result.innerHTML = '';
+  }
+
+  ffmpeg.setProgress(({ ratio }) => {
+    if (ratio >= 0 && ratio <= 1){
+      const pct = Math.round(ratio * 100);
+      bar.style.width = pct + '%';
+      statusEl.textContent = '변환 중… ' + pct + '%';
+    }
+  });
+
+  goBtn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    goBtn.disabled = true;
+    progWrap.style.display = 'block';
+    result.innerHTML = '';
+    bar.style.width = '0%';
+
+    try {
+      if (!ffmpeg.isLoaded()){
+        statusEl.textContent = '엔진 불러오는 중… (처음 한 번만, 약 25MB)';
+        await ffmpeg.load();
+      }
+
+      const ext = (currentFile.name.split('.').pop() || 'mp4').toLowerCase();
+      const inName = 'input.' + ext;
+      const outName = 'output.mp3';
+      const baseName = currentFile.name.replace(/\.[^.]+$/, '') || 'audio';
+
+      statusEl.textContent = '파일 읽는 중…';
+      ffmpeg.FS('writeFile', inName, await fetchFile(currentFile));
+
+      const bitrate = document.getElementById('bitrate').value;
+      statusEl.textContent = '변환 시작…';
+      await ffmpeg.run('-i', inName, '-vn', '-acodec', 'libmp3lame', '-b:a', bitrate, outName);
+
+      const data = ffmpeg.FS('readFile', outName);
+      const blob = new Blob([data.buffer], { type: 'audio/mpeg' });
+      const url = URL.createObjectURL(blob);
+
+      bar.style.width = '100%';
+      statusEl.textContent = '✅ 완료!';
+
+      result.innerHTML =
+        '<a class="btn-dl" id="dl" href="' + url + '" download="' + baseName + '.mp3">⬇️ ' + baseName + '.mp3 저장하기</a>' +
+        '<audio controls src="' + url + '"></audio>';
+
+      // 메모리 정리
+      try { ffmpeg.FS('unlink', inName); ffmpeg.FS('unlink', outName); } catch(e){}
+
+    } catch (err){
+      statusEl.textContent = '❌ 오류: ' + (err && err.message ? err.message : err);
+      console.error(err);
+    } finally {
+      goBtn.disabled = false;
+    }
+  });
+
+  // 푸터
+  document.getElementById('app-credit').textContent =
+    '© 2026 승재쌤의 과학실 · 최종 업데이트 2026-07-20';
+</script>
+</body>
+</html>
