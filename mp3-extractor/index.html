@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🎵 동영상 → MP3 추출기</title>
+<!-- GitHub Pages에서 SharedArrayBuffer 활성화(COOP/COEP 헤더 주입). 반드시 다른 스크립트보다 먼저 로드 -->
+<script src="coi-serviceworker.js"></script>
 <style>
   :root{
     --bg:#0f172a; --panel:#1e293b; --panel2:#334155;
@@ -149,6 +151,9 @@
     bar.style.width = '0%';
 
     try {
+      if (typeof SharedArrayBuffer === 'undefined' || !self.crossOriginIsolated){
+        throw new Error('이 환경에서는 변환 엔진을 쓸 수 없어요. 인터넷에 연결된 상태로 페이지를 한 번 새로고침(F5) 해 주세요. (로컬 파일로 직접 열면 동작하지 않습니다 — 배포된 웹주소에서 이용해 주세요.)');
+      }
       if (!ffmpeg.isLoaded()){
         statusEl.textContent = '엔진 불러오는 중… (처음 한 번만, 약 25MB)';
         await ffmpeg.load();
