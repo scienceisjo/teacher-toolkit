@@ -47,12 +47,124 @@ select.hbtn{appearance:auto; padding:6px 8px}
 .legend button:hover{background:var(--bg); border-color:var(--line)}
 .legend button.on{border-color:var(--c); background:color-mix(in srgb, var(--c) 10%, #fff); font-weight:700; color:var(--ink)}
 .legend i{width:11px; height:11px; border-radius:50%; display:inline-block; flex:none}
-/* ---------- 본문 레이아웃 ---------- */
+/* ---------- 본문 레이아웃 (허브 / 지도 / 집중) ---------- */
 #main{flex:1; display:flex; overflow:hidden; position:relative}
+#hubView{flex:1; overflow-y:auto; display:none}
+body.v-hub #hubView{display:block}
 #browseView{flex:1; display:flex; flex-direction:column; overflow:hidden}
-body.focus #browseView{display:none}
+body:not(.v-map) #browseView{display:none}
 #focusView{flex:1; display:flex; overflow:hidden}
-body:not(.focus) #focusView{display:none !important}
+body:not(.v-focus) #focusView{display:none !important}
+/* 허브에서는 지도용 헤더 도구를 감춤 */
+body.v-hub #q, body.v-hub #qCount, body.v-hub #legend,
+body.v-hub #denseBtn, body.v-hub #clearBtn, body.v-hub #miscBtn{display:none}
+body.v-hub #homeBtn{display:none}
+#homeBtn{font-weight:700}
+
+/* ---------- 허브 ---------- */
+.hubWrap{max-width:1080px; margin:0 auto; padding:34px 24px 60px}
+.hubHead{text-align:center; margin-bottom:30px}
+.hubHead h2{
+  font-size:clamp(23px,3.4vw,31px); letter-spacing:-.6px; margin-bottom:12px; line-height:1.35;
+}
+.hubHead p{font-size:15px; color:#495057; line-height:1.8; max-width:660px; margin:0 auto}
+.hubHead .nums{
+  display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:16px;
+}
+.hubHead .nums span{
+  background:#fff; border:1px solid var(--line); border-radius:20px; padding:5px 14px;
+  font-size:12.5px; color:var(--sub);
+}
+.hubHead .nums b{color:var(--ink); font-weight:800}
+/* 카드 */
+.hubCards{display:grid; grid-template-columns:repeat(auto-fit,minmax(232px,1fr)); gap:14px; margin-bottom:12px}
+.hubCard{
+  position:relative; overflow:hidden; text-align:left; cursor:pointer; font-family:inherit; color:var(--ink);
+  background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:22px 20px 20px;
+  transition:transform .14s, box-shadow .14s, border-color .14s;
+}
+.hubCard::before{
+  content:''; position:absolute; inset:0 auto 0 0; width:5px; background:var(--c);
+}
+.hubCard:hover{transform:translateY(-3px); border-color:var(--c); box-shadow:0 12px 28px rgba(0,0,0,.10)}
+.hubCard .ic{font-size:26px; line-height:1; margin-bottom:10px; display:block}
+.hubCard h3{font-size:18px; margin-bottom:5px; letter-spacing:-.3px}
+.hubCard .cnt{font-size:12px; color:var(--c); font-weight:800; margin-bottom:9px; display:block}
+.hubCard p{font-size:12.8px; color:#6b7280; line-height:1.65}
+.hubCard .go{margin-top:12px; font-size:12.5px; font-weight:700; color:var(--c)}
+.hubCard.all{
+  grid-column:1/-1; background:linear-gradient(135deg,#1b2836,#0f1a24); border-color:#0f1a24; color:#fff;
+  display:flex; align-items:center; gap:22px; padding:24px 26px;
+}
+.hubCard.all::before{
+  width:100%; height:5px; inset:0 0 auto 0;
+  background:linear-gradient(90deg,var(--energy) 0 25%,var(--matter) 25% 50%,var(--life) 50% 75%,var(--earth) 75% 100%);
+}
+.hubCard.all:hover{border-color:#000}
+.hubCard.all h3{color:#fff; font-size:19px}
+.hubCard.all p{color:#c3ccd6}
+.hubCard.all .go{color:#fff}
+.hubCard.all .ic{font-size:34px; margin:0}
+.hubExtra{
+  display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:38px; font-size:12.5px;
+}
+.hubExtra button{
+  background:#fff; border:1px solid var(--line); border-radius:20px; padding:7px 15px;
+  font-family:inherit; font-size:12.5px; cursor:pointer; color:#495057;
+}
+.hubExtra button:hover{border-color:var(--c,#868e96); background:var(--bg)}
+/* 설명 섹션 */
+.hubSec{
+  background:#fff; border:1px solid var(--line); border-radius:18px; padding:26px 28px; margin-bottom:16px;
+}
+.hubSec > h3{
+  font-size:17.5px; margin-bottom:6px; letter-spacing:-.3px; display:flex; align-items:center; gap:8px;
+}
+.hubSec > .sub{font-size:13px; color:var(--sub); margin-bottom:18px}
+.hubSec p{font-size:14px; line-height:1.85; color:#343a40; margin-bottom:12px}
+.hubSec p:last-child{margin-bottom:0}
+.hubSec b{color:#212529}
+/* 나선 예시 */
+.spiral{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin:16px 0 6px}
+.spStep{
+  flex:1 1 158px; background:var(--bg); border-radius:12px; padding:13px 14px; position:relative; margin-right:20px;
+}
+.spStep:last-child{margin-right:0}
+.spStep::after{
+  content:'▶'; position:absolute; right:-16px; top:50%; transform:translateY(-50%);
+  color:#ced4da; font-size:11px;
+}
+.spStep:last-child::after{display:none}
+.spStep small{display:block; font-size:10.5px; font-weight:800; color:var(--c); margin-bottom:4px}
+.spStep b{display:block; font-size:13px; margin-bottom:3px}
+.spStep span{font-size:11.5px; color:#6b7280; line-height:1.55}
+/* 근거 목록 */
+.whyList{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:13px; margin-top:6px}
+.whyItem{border-left:3px solid var(--c,#adb5bd); padding:2px 0 2px 14px}
+.whyItem h4{font-size:14px; margin-bottom:5px}
+.whyItem .th{font-size:11px; color:var(--sub); font-weight:600; margin-bottom:5px}
+.whyItem p{font-size:13px; line-height:1.72; color:#495057; margin:0}
+.hubNote{
+  background:#f8f9fa; border:1px dashed #ced4da; border-radius:12px; padding:13px 16px;
+  font-size:12.8px; line-height:1.75; color:#5c636a; margin-top:14px;
+}
+.hubNote b{color:#343a40}
+.hubQuote{
+  border-left:4px solid var(--matter); background:#fffbf2; border-radius:0 12px 12px 0;
+  padding:14px 18px; font-size:14px; line-height:1.8; color:#343a40; margin:14px 0;
+}
+.hubQuote cite{display:block; font-style:normal; font-size:12px; color:var(--sub); margin-top:7px}
+.hubFoot{text-align:center; margin-top:26px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap}
+.hubFoot a{
+  text-decoration:none; background:#fff; border:1.5px solid var(--line); border-radius:22px;
+  padding:10px 20px; font-size:13.5px; color:var(--ink); font-weight:600;
+}
+.hubFoot a:hover{border-color:#868e96}
+@media (max-width:640px){
+  .spStep{margin-right:0; margin-bottom:22px}
+  .spStep::after{content:'▼'; right:auto; left:50%; top:auto; bottom:-17px; transform:translateX(-50%)}
+  .hubCard.all{flex-direction:column; align-items:flex-start; gap:12px}
+}
 #hint{
   padding:9px 18px; font-size:12.5px; color:#495057; background:#fff;
   border-bottom:1px solid var(--line); display:flex; gap:16px; flex-wrap:wrap; align-items:center;
@@ -449,7 +561,7 @@ details li.linkline{background:#fff9db; border-radius:8px; padding:6px 8px; list
 @media print{
   *{animation:none !important; transition:none !important}
   body{overflow:visible; height:auto}
-  header, #browseView, footer, .pbtns, .ai, .ainote, #miscView, .lnBack,
+  header, #browseView, #hubView, footer, .pbtns, .ai, .ainote, #miscView, .lnBack,
   .modeRow, .jumps, .qtools, .lvtabs{display:none !important}
   .d-only{display:none !important}          /* 자세히 전용 블록은 인쇄 제외 */
   #main{overflow:visible; display:block}
@@ -472,6 +584,7 @@ footer#app-credit{flex:none}
 <header>
   <h1><span class="spiral">🌀</span>과학 나선 교육과정 지도</h1>
   <span class="tagline">2022 개정 · 초3 ~ 고3 전 과정</span>
+  <button class="hbtn" id="homeBtn" onclick="goHub()" title="첫 화면으로">🏠 허브</button>
   <input id="q" type="search" placeholder="단원명·성취기준 코드·키워드 검색 (예: 빛, 4과01, 밀도)">
   <span id="qCount"></span>
   <button class="hbtn" id="miscBtn" onclick="openMisc()" title="모든 단원의 오개념 지도 포인트를 한 번에">⚠️ 오개념</button>
@@ -482,6 +595,8 @@ footer#app-credit{flex:none}
 </header>
 
 <div id="main">
+  <!-- 허브: 첫 화면 -->
+  <div id="hubView"><div class="hubWrap" id="hubBody"></div></div>
   <!-- 탐색 모드: 지도 전체 폭 -->
   <div id="browseView">
     <div id="hint"></div>
@@ -575,6 +690,222 @@ const byId = Object.fromEntries(DATA.units.map(u=>[u.id,u]));
 let selected = null;
 let simple = LS.get('simple', true);   // 기본값: 간단히 보기
 
+/* ---------- 화면 전환 (허브 / 지도 / 집중) ---------- */
+function setView(v){
+  const b = document.body.classList;
+  b.toggle('v-hub', v === 'hub');
+  b.toggle('v-map', v === 'map');
+  b.toggle('v-focus', v === 'focus');
+}
+function goHub(){
+  selected = null;
+  setView('hub');
+  renderHub();
+  document.getElementById('hubView').scrollTop = 0;
+  history.replaceState(null, '', '#hub');
+}
+function goMap(area){
+  if(area !== undefined){ fArea = area; LS.set('fArea', fArea); }
+  selected = null;
+  setView('map');
+  buildMap();
+  document.getElementById('wires').innerHTML = '';
+  history.replaceState(null, '', fArea ? '#area=' + fArea : '#map');
+}
+
+/* ---------- 허브 화면 ---------- */
+const HUB_CARDS = [
+  {id:'energy', ic:'⚡', tag:'물리', desc:'힘과 운동, 에너지, 전기와 자기, 빛과 파동'},
+  {id:'matter', ic:'🧪', tag:'화학', desc:'물질의 상태와 성질, 입자, 화학 반응'},
+  {id:'life',   ic:'🌱', tag:'생명', desc:'세포와 생명 활동, 항상성, 유전, 생태계'},
+  {id:'earth',  ic:'🌏', tag:'지구과학', desc:'지권의 변화, 대기와 해양, 천체와 우주'},
+];
+const areaCount = id => DATA.units.filter(u=>u.area===id).length;
+// 한 영역에서 실제로 '연계된다'로 이어지는 초등 → 중 → 고 사슬을 찾는다.
+// (임의로 고른 대표 단원이 아니라, 교육과정이 이어 놓은 진짜 경로)
+function areaChain(id){
+  const inArea = u => u && u.area === id;
+  const isHS = u => u && (u.grade in SUBJECTS);
+  const starts = DATA.units.filter(u => inArea(u) && (u.grade === 'e34' || u.grade === 'e56'));
+  let best = null;
+  for(const s of starts){
+    const mid = s.next.map(i=>byId[i]).find(u => inArea(u) && u.grade === 'm13');
+    if(!mid) continue;
+    const hi = mid.next.map(i=>byId[i]).find(u => inArea(u) && isHS(u));
+    const chain = hi ? [s, mid, hi] : [s, mid];
+    if(!best || chain.length > best.length) best = chain;
+    if(best.length === 3) break;
+  }
+  if(best) return best;
+  // 이어지는 경로를 못 찾으면 학년별 대표 단원으로 대체
+  const pick = g => DATA.units.find(u => inArea(u) && u.grade === g);
+  return [pick('e34') || pick('e56'), pick('m13'), DATA.units.find(u=>inArea(u) && isHS(u))].filter(Boolean);
+}
+function renderHub(){
+  const nStd = DATA.units.reduce((s,u)=>s+u.standards.length,0);
+  const nQ = Object.values(ITEMS).reduce((s,it)=>s+(it.diag?it.diag.items.length:0)+(it.form?it.form.items.length:0),0);
+
+  let h = `<div class="hubHead">
+    <h2>학생이 어디서 배우고 와서<br>어디로 가는지 보이는 과학 교육과정 지도</h2>
+    <p>2022 개정 과학과 교육과정 <b>초등 3학년부터 고등학교 3학년까지</b>를 한 장으로 이었습니다.
+       단원을 누르면 선수 학습, 교육과정이 정한 범위의 끝, 학생이 갖고 들어오는 오개념,
+       그리고 도달 여부를 확인할 문항이 함께 나옵니다.</p>
+    <div class="nums">
+      <span><b>${DATA.units.length}</b> 단원</span>
+      <span><b>${nStd}</b> 성취기준</span>
+      <span><b>359</b> 성취수준 A~E</span>
+      <span><b>${nQ}</b> 예시 문항</span>
+      <span><b>${miscList().length}</b> 오개념</span>
+    </div>
+  </div>`;
+
+  h += `<div class="hubCards">`;
+  for(const c of HUB_CARDS){
+    const a = AREA_BY[c.id];
+    const chain = areaChain(c.id).map(u=>esc(u.title)).join(' → ');
+    h += `<button class="hubCard" style="--c:${a.color}" onclick="goMap('${c.id}')">
+      <span class="ic">${c.ic}</span>
+      <h3>${a.name}</h3>
+      <span class="cnt">${c.tag} · ${areaCount(c.id)}개 단원</span>
+      <p>${c.desc}</p>
+      <p style="margin-top:8px;color:#868e96">${chain}</p>
+      <div class="go">이 영역만 보기 →</div>
+    </button>`;
+  }
+  h += `<button class="hubCard all" onclick="goMap(null)">
+    <span class="ic">🌀</span>
+    <div style="flex:1">
+      <h3>네 영역을 한 화면에서 보기</h3>
+      <p>영역이 가로 노선, 학년이 역이 되는 전체 지도입니다.
+         한 개념이 학년을 넘어 어떻게 자라는지, 영역끼리 어디서 만나는지 한눈에 보입니다.</p>
+    </div>
+    <div class="go">전체 지도 열기 →</div>
+  </button>`;
+  h += `</div>`;
+
+  h += `<div class="hubExtra">
+    <button style="--c:${AREA_BY.society.color}" onclick="goMap('society')">＋ 과학과 사회 ${areaCount('society')}단원</button>
+    <button onclick="goMap(null)">＋ 통합과학(고1) ${areaCount('integrated')}단원</button>
+    <button onclick="openMisc()">⚠️ 오개념 ${miscList().length}개 모아보기</button>
+  </div>`;
+
+  h += hubPedagogy();
+
+  h += `<div class="hubFoot">
+    <a href="about/">🤝 이 지도 소개 · 함께 만들기</a>
+  </div>`;
+
+  document.getElementById('hubBody').innerHTML = h;
+}
+
+/* 교육학적 설명 — 나선형 조직 / 왜 알아야 하나 / 진단평가 */
+function hubPedagogy(){
+  return `
+  <div class="hubSec">
+    <h3>🌀 이 지도는 어떻게 조직되었나</h3>
+    <div class="sub">나선형 교육과정 (spiral curriculum)</div>
+    <p>
+      2022 개정 교육과정에서 <b>초등 3학년~중학교 3학년의 ‘과학’</b>은
+      <b>운동과 에너지 · 물질 · 생명 · 지구와 우주 · 과학과 사회</b>의 다섯 영역으로 조직되어 있습니다.
+      같은 영역이 학년군마다 다시 등장하되, 그때마다 다루는 범위가 넓어지고 추상화 수준이 올라갑니다.
+      이렇게 같은 개념을 되풀이하며 정교하게 다시 다루는 방식을 <b>나선형 교육과정</b>이라고 합니다.
+    </p>
+    <p>실제로 ‘힘’이라는 하나의 개념은 이렇게 자랍니다.</p>
+    <div class="spiral">
+      <div class="spStep" style="--c:var(--energy)">
+        <small>초등 3~4학년</small><b>힘과 우리 생활</b>
+        <span>밀고 당기는 경험, 무게 비교, 도구를 쓰면 힘이 달라짐</span>
+      </div>
+      <div class="spStep" style="--c:var(--energy)">
+        <small>초등 5~6학년</small><b>물체의 운동</b>
+        <span>위치 변화를 시간으로 나누어 속력으로 표현</span>
+      </div>
+      <div class="spStep" style="--c:var(--energy)">
+        <small>중학교</small><b>힘의 작용</b>
+        <span>중력·탄성력·마찰력·부력을 구분, 알짜힘과 운동 상태 변화</span>
+      </div>
+      <div class="spStep" style="--c:var(--energy)">
+        <small>고등학교</small><b>힘과 에너지</b>
+        <span>뉴턴 운동 법칙으로 정량화, 운동량 보존까지</span>
+      </div>
+    </div>
+    <p style="margin-top:14px">
+      단원 사이를 잇는 연결선은 제가 임의로 그린 것이 아니라,
+      교육과정 문서에 적힌 <b>“～와 연계된다”</b>라는 문장을 그대로 옮긴 것입니다.
+    </p>
+    <div class="hubNote">
+      <b>한 가지 밝혀둘 점.</b> 위 다섯 영역은 공통 교육과정(초3~중3)의 체계입니다.
+      고등학교는 선택 중심 교육과정이어서 ‘통합과학1·2’와 15개 선택과목이 각자의 영역 체계를 갖습니다.
+      이 지도는 고교 선택과목을 성격에 따라 네 영역의 흐름에 이어 붙여 놓았는데,
+      <b>그 배치는 교육과정 문서가 정한 것이 아니라 이 지도의 편집</b>입니다.
+      성취기준·성취수준 본문은 문서 그대로입니다.
+    </div>
+  </div>
+
+  <div class="hubSec">
+    <h3>🎓 이 지도가 실제로 줄여주는 일</h3>
+    <div class="sub">수업 준비에서 되풀이되는 세 가지 확인</div>
+    <p>
+      새 단원에 들어가기 전 확인해야 할 것들은 이미 교육과정 문서에 다 있습니다.
+      다만 초등 해설서와 중등 해설서, 성취수준 자료를 각각 열어 찾아야 합니다.
+      이 지도는 그 확인을 단원 하나 누르는 것으로 줄이려고 만들었습니다.
+    </p>
+    <div class="whyList">
+      <div class="whyItem" style="--c:var(--earth)">
+        <div class="th">“이거 5학년 때 배웠을 텐데”</div>
+        <h4>어디서 배우고 오는지</h4>
+        <p>어느 학년 어느 단원에서, 어떤 성취기준으로 배우고 오는지 바로 나옵니다.
+           새 개념을 학생의 어디에 걸어줄지 정하는 데 필요한 정보입니다.</p>
+      </div>
+      <div class="whyItem" style="--c:var(--energy)">
+        <div class="th">“이거 어디까지 나가야 하나”</div>
+        <h4>“여기까지만” — 범위의 끝</h4>
+        <p>평가 문항을 만들 때마다 걸리는 그 판단을, 교육과정 해설의
+           <b>범위 제한 문장 그대로</b> 붙여 보여줍니다.
+           예: 중학교 「힘의 작용」 — “나란한 힘의 합력만을 다루도록 한다”.</p>
+      </div>
+      <div class="whyItem" style="--c:var(--life)">
+        <div class="th">“단원평가는 맞히는데 개념은 안 바뀐다”</div>
+        <h4>학생이 갖고 들어오는 오개념</h4>
+        <p>학생은 빈 그릇이 아니라 자기 나름의 설명 틀을 갖고 교실에 들어옵니다.
+           그 틀을 수업에서 겉으로 드러내 다루지 않으면, 새로 배운 내용은
+           시험용으로만 남고 원래의 설명이 되살아나는 일이 흔합니다.</p>
+      </div>
+    </div>
+    <div class="hubQuote">
+      “학습에 영향을 미치는 가장 중요한 단일 요인은 학습자가 <b>이미 알고 있는 것</b>이다.
+       이를 확인하고, 그에 맞추어 가르치라.”
+      <cite>오수벨(D. Ausubel), 『교육심리학』(1968) 서문 — 이 지도가 하려는 일이 딱 이 한 문장입니다.</cite>
+    </div>
+    <p style="font-size:13px;color:var(--sub)">
+      실제로 하버드-스미소니언이 만든 다큐멘터리 「사적인 우주」(1987)에서는
+      졸업 가운을 입은 하버드 졸업생들이 계절 변화를 “여름엔 지구가 태양에 가까워서”라고 설명합니다.
+      학교에서 배운 지식이 원래의 설명 틀을 대체하지 못한 장면입니다.
+    </p>
+  </div>
+
+  <div class="hubSec">
+    <h3>🩺 진단평가는 왜 여기서 나오나</h3>
+    <div class="sub">선행 지식 확인이 수업 설계에서 갖는 자리</div>
+    <p>
+      선수 학습의 결손은 그대로 쌓입니다. 앞 단원이 비어 있는 채로 다음 단원에 들어가면
+      그 시간은 대부분 회복되지 않습니다. 그래서 수업을 시작하기 전에 두 가지를 봅니다.
+      <b>선수 학습에 결손이 있는가</b>, 그리고 <b>어떤 오개념을 갖고 있는가</b>.
+    </p>
+    <div class="hubQuote" style="border-left-color:var(--earth); background:#f1f6fb">
+      이 지도의 진단 문항은 따로 지어낸 것이 아니라
+      <b>선수 단원의 성취기준에서 끌어온 것</b>입니다.
+      진단평가란 결국 “직전에 연계된 단원의 성취기준에 도달했는가”를 묻는 일이기 때문입니다.
+    </div>
+    <p>
+      단원을 열면 <b>수업 전 확인</b> 다섯 줄이 먼저 나옵니다 —
+      어디서 배우고 오는지, 어디까지만 가르치면 되는지, 어떤 오개념을 확인해야 하는지,
+      준비물은 무엇인지, 도입 발문으로 무엇을 던질지.
+      수업에 들어가기 전 5분이면 단원 하나를 파악할 수 있게 만든 것입니다.
+    </p>
+  </div>`;
+}
+
 /* ---------- 노선도 렌더 ---------- */
 const unitsOf = (gr, areaId) => DATA.units.filter(u=>u.grade===gr && (!areaId || u.area===areaId)).sort((x,y)=>x.num-y.num);
 function buildMap(){
@@ -649,7 +980,7 @@ const baseCls = b => 'st ' + (b.dataset.cls || '');
 function select(id){
   selected = id;
   const u = byId[id];
-  document.body.classList.add('focus');
+  setView('focus');
   document.getElementById('focusView').hidden = false;
   document.getElementById('wires').innerHTML = '';
   renderLineage(u);
@@ -660,11 +991,10 @@ function select(id){
 }
 function clearSel(){
   selected = null;
-  document.body.classList.remove('focus');
-  document.getElementById('focusView').hidden = true;
+  setView('map');
   document.querySelectorAll('.st').forEach(b=>b.className=baseCls(b));
   document.getElementById('wires').innerHTML='';
-  if(location.hash) history.replaceState(null, '', location.pathname + location.search);
+  history.replaceState(null, '', fArea ? '#area=' + fArea : '#map');
 }
 /* 계보 레일: 선수(위) → 현재 → 후속(아래), 순차 애니메이션 */
 function renderLineage(u){
@@ -710,7 +1040,7 @@ function unitMiscons(uid){
 function drawWires(){
   const svg = document.getElementById('wires');
   svg.innerHTML='';
-  if(!selected || document.body.classList.contains('focus')) return;
+  if(!selected || document.body.classList.contains('v-focus')) return;
   const inner = document.getElementById('mapInner').getBoundingClientRect();
   svg.setAttribute('viewBox', `0 0 ${inner.width} ${inner.height}`);
   const u = byId[selected];
@@ -1285,7 +1615,7 @@ function toast(msg){
 /* ---------- 검색 ---------- */
 const qEl = document.getElementById('q');
 qEl.addEventListener('input', ()=>{
-  if(document.body.classList.contains('focus')) clearSel();
+  if(document.body.classList.contains('v-focus')) clearSel();
   const q = qEl.value.trim().toLowerCase().replace(/\s+/g,'');
   const cnt = document.getElementById('qCount');
   if(!q){
@@ -1307,7 +1637,9 @@ qEl.addEventListener('input', ()=>{
 document.addEventListener('keydown', e=>{
   if(e.key !== 'Escape') return;
   if(document.getElementById('miscView').classList.contains('open')){ closeMisc(); return; }
-  qEl.value=''; qEl.dispatchEvent(new Event('input')); clearSel();
+  if(document.body.classList.contains('v-focus')){ clearSel(); return; }
+  qEl.value=''; qEl.dispatchEvent(new Event('input'));
+  if(document.body.classList.contains('v-map')) goHub();
 });
 
 /* ---------- 범례(= 영역 필터) & 초기화 ---------- */
@@ -1317,14 +1649,19 @@ document.getElementById('legend').innerHTML =
 
 // 링크 공유: #u=단원id
 function applyHash(){
-  const m = (location.hash || '').match(/u=([^&]+)/);
-  if(m && byId[decodeURIComponent(m[1])]) select(decodeURIComponent(m[1]));
+  const h = location.hash || '';
+  const mu = h.match(/u=([^&]+)/);
+  if(mu && byId[decodeURIComponent(mu[1])]){ select(decodeURIComponent(mu[1])); return; }
+  const ma = h.match(/area=([^&]*)/);
+  if(ma){ goMap(ma[1] ? decodeURIComponent(ma[1]) : null); return; }
+  if(/#map/.test(h)){ goMap(undefined); return; }
+  goHub();
 }
 window.addEventListener('hashchange', applyHash);
 
 buildMap();
 renderWelcome();
-applyHash();
+applyHash();   // 해시가 없으면 허브로 진입
 window.addEventListener('resize', ()=>requestAnimationFrame(drawWires));
 </script>
 </body>
