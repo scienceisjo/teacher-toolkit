@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>과학 나선 교육과정 지도 — 함께 만들 선생님을 찾습니다</title>
+<meta name="description" content="2022 개정 과학과 교육과정 초3~고3 전체를 한 장의 지도로. 단원을 누르면 선수·후속 연계와 성취기준, 성취수준, 예시문항이 한눈에 보입니다.">
+<meta property="og:title" content="과학 나선 교육과정 지도">
+<meta property="og:description" content="초3~고3 과학 교육과정 108단원을 한 장의 지도로. 함께 채워주실 선생님을 찾습니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f7f9; --card:#fff; --ink:#1b1d20; --sub:#6b7280; --line:#e5e7eb;
+  --brand:#17395c;
+  --energy:#e03131; --matter:#f08c00; --life:#2f9e44; --earth:#1971c2; --society:#9c36b5;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:'Pretendard','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; line-height:1.7;
+}
+.rainbow{height:5px; background:linear-gradient(90deg,
+  var(--energy) 0 20%, var(--matter) 20% 40%, var(--life) 40% 60%,
+  var(--earth) 60% 80%, var(--society) 80% 100%)}
+.wrap{max-width:880px; margin:0 auto; padding:0 22px}
+section{padding:54px 0}
+h2{font-family:'Nanum Myeongjo',serif; font-size:clamp(21px,3.6vw,27px); color:var(--brand); margin-bottom:8px}
+h2 + .lead{color:var(--sub); font-size:15px; margin-bottom:22px}
+
+/* 히어로 */
+header.hero{background:#fff; border-bottom:1px solid var(--line); padding:60px 0 52px; text-align:center}
+.kicker{font-size:12.5px; font-weight:800; letter-spacing:.16em; color:var(--energy); text-transform:uppercase}
+.hero h1{
+  font-family:'Nanum Myeongjo',serif; font-weight:800; color:var(--brand);
+  font-size:clamp(29px,6.4vw,46px); line-height:1.3; margin:12px 0 16px; letter-spacing:-.5px;
+}
+.hero p.sub{font-size:clamp(15px,2.4vw,17.5px); color:#374151; max-width:620px; margin:0 auto 30px}
+.btns{display:flex; gap:11px; justify-content:center; flex-wrap:wrap}
+.btn{
+  display:inline-block; text-decoration:none; padding:14px 26px; border-radius:999px;
+  font-size:15.5px; font-weight:700; transition:transform .12s, box-shadow .12s;
+}
+.btn.main{background:var(--brand); color:#fff; box-shadow:0 8px 22px rgba(23,57,92,.28)}
+.btn.main:hover{transform:translateY(-2px); box-shadow:0 12px 28px rgba(23,57,92,.34)}
+.btn.ghost{background:#fff; color:var(--brand); border:1.6px solid #cbd5e1}
+.btn.ghost:hover{border-color:var(--brand); transform:translateY(-2px)}
+.hero .note{font-size:12.5px; color:var(--sub); margin-top:16px}
+
+/* 숫자 */
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-top:8px}
+.stat{background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px 16px; text-align:center}
+.stat b{display:block; font-size:29px; font-weight:800; color:var(--brand); line-height:1.2}
+.stat span{font-size:12.5px; color:var(--sub)}
+
+/* 카드 */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px}
+.card{background:#fff; border:1px solid var(--line); border-radius:16px; padding:22px}
+.card h3{font-size:16.5px; margin-bottom:7px; display:flex; align-items:center; gap:8px}
+.card p{font-size:14px; color:#4b5563}
+.card .ex{
+  margin-top:11px; font-size:13px; color:#374151; background:var(--bg);
+  border-left:3px solid var(--c,#cbd5e1); border-radius:0 9px 9px 0; padding:9px 12px; line-height:1.65;
+}
+
+/* 정직 구분 */
+.split{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px}
+.box{border-radius:16px; padding:22px}
+.box h3{font-size:15.5px; margin-bottom:10px}
+.box ul{margin-left:17px}
+.box li{font-size:14px; margin-bottom:6px}
+.box.official{background:#eff6ff; border:1px solid #bfdbfe}
+.box.official h3{color:#1d4ed8}
+.box.draft{background:#fff7ed; border:1px solid #fed7aa}
+.box.draft h3{color:#c2410c}
+
+/* 왜 */
+.why{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+.why blockquote{
+  font-size:clamp(16px,2.6vw,19px); line-height:1.85; color:#1f2937;
+  border-left:4px solid var(--matter); padding-left:20px; margin:6px 0 18px;
+}
+.why p{font-size:15px; color:#4b5563; margin-bottom:12px}
+
+/* 모집 */
+.join{background:linear-gradient(160deg,#17395c,#0f2740); color:#fff}
+.join h2{color:#fff}
+.join .lead{color:#cbd5e1}
+.ask{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:12px; margin:22px 0}
+.ask div{background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.16); border-radius:14px; padding:16px 18px}
+.ask b{display:block; font-size:15px; margin-bottom:5px}
+.ask span{font-size:13.5px; color:#cbd5e1}
+.joinbox{
+  background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.2);
+  border-radius:16px; padding:22px; margin-top:8px;
+}
+.joinbox p{font-size:14.5px; color:#e2e8f0; margin-bottom:10px}
+.joinbox a{color:#fff; font-weight:700}
+.small{font-size:12.5px; color:#94a3b8; margin-top:14px}
+
+/* 대상 */
+.who li{font-size:14.5px; margin-bottom:9px; list-style:none; padding-left:26px; position:relative}
+.who li::before{content:'✓'; position:absolute; left:0; color:var(--life); font-weight:800}
+
+footer#app-credit{
+  margin-top:0; padding:26px 12px; text-align:center; color:#8a8f98; font-size:12.5px;
+  line-height:1.7; border-top:1px solid var(--line); background:#fff;
+}
+</style>
+</head>
+<body>
+<div class="rainbow"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">2022 개정 과학과 교육과정</div>
+    <h1>초3부터 고3까지,<br>과학 교육과정을 한 장의 지도로</h1>
+    <p class="sub">
+      단원 하나를 맡으면 늘 같은 질문이 생깁니다.<br>
+      <b>애들이 이걸 어디까지 배우고 왔지? 나는 어디까지 가르쳐야 하지?</b>
+    </p>
+    <div class="btns">
+      <a class="btn main" href="../">지도 열어보기 →</a>
+      <a class="btn ghost" href="#join">함께 만들기</a>
+    </div>
+    <p class="note">설치·로그인·비용 없음 · 링크만 누르면 바로 열립니다</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>지금 들어있는 것</h2>
+    <p class="lead">교육부 고시 문서를 그대로 옮겼습니다.</p>
+    <div class="stats">
+      <div class="stat"><b>108</b><span>단원 (초3~고3)</span></div>
+      <div class="stat"><b>461</b><span>성취기준</span></div>
+      <div class="stat"><b>359</b><span>성취수준 A~E</span></div>
+      <div class="stat"><b>648</b><span>예시 문항</span></div>
+      <div class="stat"><b>15</b><span>고교 선택과목</span></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>단원을 누르면</h2>
+    <p class="lead">수업 들어가기 전에 5분이면 파악됩니다.</p>
+    <div class="cards">
+      <div class="card" style="--c:var(--earth)">
+        <h3>📍 어디서 와서 어디로 가나</h3>
+        <p>선수 단원과 후속 단원이 위에서 아래로 이어집니다. 교육과정 원문의 “~와 연계된다” 문장을 그대로 그래프로 만든 것입니다.</p>
+        <div class="ex">중2 「생식과 유전」 → 고2·3 「생물의 유전」의 유전자·발현·생명공학기술로 이어짐</div>
+      </div>
+      <div class="card" style="--c:var(--energy)">
+        <h3>⚠️ 여기까지만</h3>
+        <p>교육과정이 정한 <b>범위의 끝</b>을 뽑아 보여줍니다. 더 들어가지 않아도 되는 지점을 알면 수업 시간이 절약됩니다.</p>
+        <div class="ex">「힘의 작용」 — 나란한 힘의 합력만을 다루도록 한다</div>
+      </div>
+      <div class="card" style="--c:var(--matter)">
+        <h3>🎯 이 정도면 도달</h3>
+        <p>교육부·한국교육과정평가원의 성취수준 A~E를 그대로 담았습니다. 평가계획서에 붙여 쓸 수 있게 복사됩니다.</p>
+        <div class="ex">성취기준별 5수준 + 영역별 성취수준(지식·이해 / 과정·기능 / 가치·태도)</div>
+      </div>
+      <div class="card" style="--c:var(--life)">
+        <h3>🧠 학생이 갖고 들어오는 오개념</h3>
+        <p>수업 전에 미리 알고 들어가면 좋을 착각들. 전 단원 오개념을 한 번에 모아 볼 수도 있습니다.</p>
+        <div class="ex">“차가운 캔에서 물이 새어 나왔다” · “버섯은 식물이다” · “여름에 지구가 태양에 가까워서 덥다”</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>무엇이 공식이고, 무엇이 초안인가</h2>
+    <p class="lead">이 구분을 분명히 하는 것이 이 앱의 원칙입니다.</p>
+    <div class="split">
+      <div class="box official">
+        <h3>📘 공식 문서 그대로</h3>
+        <ul>
+          <li>교육부 고시 <b>별책9 과학과 교육과정</b> — 성취기준·해설·적용 시 고려사항</li>
+          <li>교육부·한국교육과정평가원 <b>성취수준</b> — A~E 5수준, 영역별 성취수준</li>
+          <li>기계로 추출한 뒤 <b>원문과 전수 대조</b>해 검증했습니다</li>
+        </ul>
+      </div>
+      <div class="box draft">
+        <h3>✏️ 아직 초안 — 검증이 필요합니다</h3>
+        <ul>
+          <li><b>예시 문항 648개</b> (진단 324 · 형성 324)</li>
+          <li><b>오개념 324개</b></li>
+          <li>제가 AI로 만든 초안입니다. <b>현장에서 검증된 것이 아닙니다.</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why">
+  <div class="wrap">
+    <h2>왜 만들었나</h2>
+    <blockquote>
+      교육과정 문서에는 답이 다 있습니다.<br>
+      다만 수백 쪽을 매번 뒤질 수는 없었습니다.
+    </blockquote>
+    <p>
+      학기마다 단원을 맡을 때 학생들이 무엇을 배우고 왔는지, 어디까지 가르쳐야 하는지, 이 내용이 나중에 어디로 이어지는지를
+      확인하고 싶었습니다. 별책9와 성취수준 자료를 그대로 구조화해 클릭 몇 번으로 볼 수 있게 만든 것이 이 지도입니다.
+    </p>
+    <p>
+      그런데 문서를 옮기는 일은 혼자 할 수 있어도, <b>“애들이 여기서 꼭 걸린다”</b>거나
+      <b>“이 실험은 이렇게 해야 성공한다”</b>는 것은 그 과목을 오래 가르친 사람만 압니다.
+      저는 화학 전공이라 물리·생명·지구 단원은 문서는 읽어도 현장 감각이 없습니다.
+    </p>
+  </div>
+</section>
+
+<section id="join" class="join">
+  <div class="wrap">
+    <h2>함께 만들 선생님을 찾습니다</h2>
+    <p class="lead">선생님 전공 단원 한두 개면 충분합니다.</p>
+    <div class="ask">
+      <div><b>🧠 오개념</b><span>애들이 진짜 걸리는 지점과, 그걸 깨주는 발문·반례</span></div>
+      <div><b>💡 전공자만 아는 꿀팁</b><span>비전공 교사가 놓치기 쉬운 것, 이렇게 설명하면 통하는 것</span></div>
+      <div><b>🔬 탐구·실험 실전</b><span>실제로 잘 되는지, 대체 재료, 시간, 안전</span></div>
+      <div><b>📝 수업·출제 포인트</b><span>차시 배분, 도입 방법, 어떻게 물으면 좋은지</span></div>
+    </div>
+    <div class="joinbox">
+      <p>
+        아직 제출 양식은 준비 중입니다. 우선 <b>“같이 해보겠다”는 뜻만</b> 알려주시면,
+        방식이 정해지는 대로 안내드리겠습니다.
+      </p>
+      <p>📮 <a href="mailto:xpistos0517@gmail.com?subject=%EA%B3%BC%ED%95%99%20%EB%82%98%EC%84%A0%20%EA%B5%90%EC%9C%A1%EA%B3%BC%EC%A0%95%20%EC%A7%80%EB%8F%84%20%ED%95%A8%EA%BB%98%ED%95%98%EA%B8%B0">xpistos0517@gmail.com</a></p>
+      <p class="small">
+        주신 내용은 성함·학교와 함께 앱에 표시됩니다(원하시면 익명·닉네임도 가능합니다).
+        특정 서비스의 자산이 아니라, 과학 교사들이 함께 쓰는 공용 자료로 남기려 합니다.<br>
+        ※ 저작권 문제로 <b>교과서·문제집의 문항 원문</b>은 받지 않습니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>이런 분께 도움이 됩니다</h2>
+    <ul class="who">
+      <li>올해 처음 그 학년을 맡으신 선생님</li>
+      <li>통합과학·자유학기·주제선택 등 <b>전공이 아닌 영역</b>을 가르치게 되신 선생님</li>
+      <li>평가계획서의 성취기준·성취수준 표를 작성하실 때</li>
+      <li>초등–중등–고등 연계를 확인하고 싶으실 때</li>
+      <li>고교학점제 과목 선택 상담을 하실 때</li>
+      <li>전문적학습공동체 주제를 찾고 계신 선생님</li>
+    </ul>
+    <div class="btns" style="margin-top:26px">
+      <a class="btn main" href="../">지도 열어보기 →</a>
+    </div>
+  </div>
+</section>
+
+<footer id="app-credit">
+  © 2026 조승재(과학이조선생) · 해누리중학교 · All rights reserved<br>
+  <span style="font-size:11px;opacity:.85;">최종 업데이트: 2026-07-24</span>
+</footer>
+</body>
+</html>
