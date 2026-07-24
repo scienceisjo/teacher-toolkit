@@ -48,7 +48,74 @@ select.hbtn{appearance:auto; padding:6px 8px}
 .legend button.on{border-color:var(--c); background:color-mix(in srgb, var(--c) 10%, #fff); font-weight:700; color:var(--ink)}
 .legend i{width:11px; height:11px; border-radius:50%; display:inline-block; flex:none}
 /* ---------- 본문 레이아웃 ---------- */
-#main{flex:1; display:flex; overflow:hidden}
+#main{flex:1; display:flex; overflow:hidden; position:relative}
+#browseView{flex:1; display:flex; flex-direction:column; overflow:hidden}
+body.focus #browseView{display:none}
+#focusView{flex:1; display:flex; overflow:hidden}
+body:not(.focus) #focusView{display:none !important}
+#hint{
+  padding:9px 18px; font-size:12.5px; color:#495057; background:#fff;
+  border-bottom:1px solid var(--line); display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+}
+#hint b{color:var(--ink)}
+#hint .sep{color:var(--line)}
+@keyframes mapOut{ to{ opacity:0; transform:scale(.97) } }
+#browseView.leaving{animation:mapOut .26s ease forwards}
+/* 계보 레일 */
+#lineage{
+  width:300px; flex:none; overflow-y:auto; padding:18px 16px 40px; background:#fff;
+  border-right:1px solid var(--line);
+}
+.lnBack{
+  width:100%; padding:8px; border:1.5px solid var(--line); background:#fff; border-radius:10px;
+  font-family:inherit; font-size:12.5px; cursor:pointer; margin-bottom:16px; color:#495057;
+}
+.lnBack:hover{border-color:#868e96; background:var(--bg)}
+.lnLabel{font-size:11px; font-weight:800; color:var(--sub); margin:4px 0 7px; letter-spacing:.02em}
+@keyframes lnIn{ from{ opacity:0; transform:translateY(-18px) } to{ opacity:1; transform:none } }
+.lnCard{
+  display:block; width:100%; text-align:left; border:1.5px solid var(--line); background:#fff;
+  border-radius:12px; padding:9px 12px; margin-bottom:7px; font-family:inherit; cursor:pointer;
+  line-height:1.35; transition:border-color .12s, transform .12s;
+  animation:lnIn .4s cubic-bezier(.22,1,.36,1) backwards; color:var(--ink);
+}
+.lnCard:hover{border-color:#868e96; transform:translateX(2px)}
+.lnCard small{display:block; font-size:10.5px; color:var(--sub); margin-bottom:1px}
+.lnCard b{font-size:13px; font-weight:600}
+.lnCard.p{border-left:4px solid var(--amber)}
+.lnCard.n{border-left:4px solid var(--blue)}
+.lnCard.r{border-left:4px solid #adb5bd; border-style:dashed}
+.lnCard.cur{
+  background:var(--c); border-color:var(--c); color:#fff; padding:13px 14px;
+  box-shadow:0 6px 18px color-mix(in srgb, var(--c) 35%, transparent);
+}
+.lnCard.cur small{color:rgba(255,255,255,.85)}
+.lnCard.cur b{font-size:15.5px; font-weight:800}
+.lnArrow{text-align:center; color:#ced4da; font-size:15px; line-height:1; margin:1px 0 6px;
+  animation:lnIn .4s cubic-bezier(.22,1,.36,1) backwards}
+.lnNone{font-size:11.5px; color:var(--sub); background:var(--bg); border-radius:9px; padding:8px 10px; margin-bottom:7px}
+/* 브리핑 본문 */
+#briefWrap{flex:1; overflow-y:auto; padding:0 0 50px}
+#brief{max-width:1060px; margin:0 auto; padding:0 26px}
+@keyframes brIn{ from{ opacity:0; transform:translateY(14px) } to{ opacity:1; transform:none } }
+.brAnim{animation:brIn .42s cubic-bezier(.22,1,.36,1) backwards}
+.bGrid{display:grid; grid-template-columns:repeat(auto-fit, minmax(310px,1fr)); gap:14px; margin-bottom:14px}
+.bCard{background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 19px}
+.bCard.full{grid-column:1/-1}
+.bCard>h4{
+  font-size:13px; margin-bottom:10px; display:flex; align-items:center; gap:6px; color:#343a40;
+}
+.bCard>h4 .cnt{font-weight:400; color:var(--sub); font-size:11.5px}
+.bigIdea{
+  background:linear-gradient(135deg, color-mix(in srgb, var(--ac) 9%, #fff), #fff);
+  border:1.5px solid color-mix(in srgb, var(--ac) 26%, #fff); border-radius:16px;
+  padding:18px 22px; margin-bottom:14px;
+}
+.bigIdea h4{font-size:12px; color:var(--ac); font-weight:800; margin-bottom:7px; letter-spacing:.02em}
+.bigIdea p{font-size:15px; line-height:1.75; color:#212529}
+.misList li{list-style:none; font-size:13px; line-height:1.7; margin-bottom:9px; padding-left:20px; text-indent:-20px; color:#343a40}
+.misList li::before{content:'⚠️ '; }
+.misList li b{color:#c2255c}
 #mapWrap{flex:1; overflow:auto; padding:18px 14px 40px}
 #mapInner{position:relative; min-width:1540px; max-width:1800px; margin:0 auto}
 #wires{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:5}
@@ -202,15 +269,11 @@ select.hbtn{appearance:auto; padding:6px 8px}
 .st.rel{border-style:dashed; border-color:#adb5bd; box-shadow:0 0 0 3px rgba(173,181,189,.2)}
 .st.dim{opacity:.28; filter:saturate(.4)}
 /* ---------- 상세 패널 ---------- */
-#panel{
-  width:475px; max-width:44vw; background:#fff; border-left:1px solid var(--line);
-  overflow-y:auto; padding:20px 22px 30px; z-index:20;
-}
-#panel .empty{color:var(--sub); font-size:14px; line-height:1.8; padding-top:30px; text-align:center}
-#panel .empty .big{font-size:40px; margin-bottom:10px}
-#panel .stats{display:flex; justify-content:center; gap:18px; margin:18px 0; flex-wrap:wrap}
-#panel .stats div{background:var(--bg); border-radius:12px; padding:10px 16px; font-size:12px; color:var(--sub)}
-#panel .stats b{display:block; font-size:20px; color:var(--ink)}
+#brief .empty{color:var(--sub); font-size:14px; line-height:1.8; padding-top:30px; text-align:center}
+#brief .empty .big{font-size:40px; margin-bottom:10px}
+#hint .stats{display:flex; gap:10px; flex-wrap:wrap}
+#hint .stats div{background:var(--bg); border-radius:9px; padding:3px 10px; font-size:11.5px; color:var(--sub)}
+#hint .stats b{color:var(--ink); font-weight:800}
 /* 고정 헤더 */
 .pTop{
   position:sticky; top:0; z-index:6; background:#fff; margin:-20px -22px 12px; padding:14px 22px 10px;
@@ -286,8 +349,8 @@ select.hbtn{appearance:auto; padding:6px 8px}
 .pHead .chips{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px}
 .chip{display:inline-block; font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:12px; color:#fff}
 .chip.gr{background:#868e96}
-#panel h2{font-size:22px; letter-spacing:-.5px; margin:2px 0 4px}
-#panel .coderange{font-size:12px; color:var(--sub); margin-bottom:14px}
+#brief h2{font-size:24px; letter-spacing:-.5px; margin:2px 0 4px}
+#brief .coderange{font-size:12px; color:var(--sub); margin-bottom:14px}
 .pbtns{display:flex; gap:8px; margin:10px 0 18px}
 .pbtns button{
   flex:1; padding:8px 10px; border:1.5px solid var(--line); background:#fff; border-radius:10px;
@@ -352,23 +415,30 @@ details li.linkline{background:#fff9db; border-radius:8px; padding:6px 8px; list
   transition:transform .25s; z-index:99; box-shadow:0 6px 20px rgba(0,0,0,.3); max-width:90vw; text-align:center;
 }
 #toast.show{transform:translateX(-50%) translateY(0)}
-/* 모바일 */
-#pClose{display:none}
-@media (max-width:1000px){
-  #panel{position:fixed; right:0; top:0; bottom:0; width:min(480px,94vw); max-width:94vw;
-    box-shadow:-8px 0 30px rgba(0,0,0,.2); transform:translateX(105%); transition:transform .25s}
-  #panel.open{transform:none}
-  #pClose{display:block; position:sticky; top:0; float:right; border:none; background:var(--bg);
-    width:34px; height:34px; border-radius:50%; font-size:16px; cursor:pointer; z-index:5}
+/* 좁은 화면: 계보 레일을 가로 스크롤 띠로 */
+@media (max-width:900px){
+  #focusView{flex-direction:column}
+  #lineage{width:auto; border-right:none; border-bottom:1px solid var(--line); padding:12px 14px;
+    max-height:none; display:flex; gap:8px; overflow-x:auto; overflow-y:hidden; align-items:stretch}
+  #lineage .lnBack{width:auto; margin:0; flex:none}
+  #lineage .lnLabel, #lineage .lnArrow, #lineage .lnNone{display:none}
+  .lnCard{margin:0; min-width:170px; flex:none}
+  #brief{padding:0 16px}
 }
 /* 인쇄: 단원 브리핑 1장(간단히 보기 내용만) */
 @media print{
+  *{animation:none !important; transition:none !important}
   body{overflow:visible; height:auto}
-  header, #mapWrap, footer, .pbtns, .ai, .ainote, #pClose, #miscView,
+  header, #browseView, footer, .pbtns, .ai, .ainote, #miscView, .lnBack,
   .modeRow, .jumps, .qtools, .lvtabs{display:none !important}
   .d-only{display:none !important}          /* 자세히 전용 블록은 인쇄 제외 */
   #main{overflow:visible; display:block}
-  #panel{width:100%; max-width:100%; border:none; overflow:visible; transform:none; position:static; padding:0}
+  #focusView{display:block !important; overflow:visible}
+  #lineage{width:100%; border:none; padding:0 0 10px; overflow:visible}
+  #briefWrap{overflow:visible; padding:0}
+  #brief{max-width:100%; padding:0}
+  .bGrid{display:block}
+  .bCard{border:none; padding:0 0 10px; page-break-inside:avoid}
   .pTop{position:static; margin:0 0 10px; padding:0 0 8px; border-bottom:2px solid #212529}
   .sBlk, .limitBox, details{page-break-inside:avoid}
   .limitBox{background:#fff !important; border:1.5px solid #333 !important}
@@ -391,11 +461,19 @@ footer#app-credit{flex:none}
 </header>
 
 <div id="main">
-  <div id="mapWrap"><div id="mapInner">
-    <svg id="wires"></svg>
-    <div id="mapGrid"></div>
-  </div></div>
-  <aside id="panel"></aside>
+  <!-- 탐색 모드: 지도 전체 폭 -->
+  <div id="browseView">
+    <div id="hint"></div>
+    <div id="mapWrap"><div id="mapInner">
+      <svg id="wires"></svg>
+      <div id="mapGrid"></div>
+    </div></div>
+  </div>
+  <!-- 집중 모드: 계보 레일 + 넓은 브리핑 -->
+  <div id="focusView" hidden>
+    <aside id="lineage"></aside>
+    <div id="briefWrap"><div id="brief"></div></div>
+  </div>
 </div>
 
 <div id="miscView" onclick="if(event.target===this)closeMisc()">
@@ -535,40 +613,72 @@ function pill(u, compact){
 }
 const baseCls = b => 'st ' + (b.dataset.cls || '');
 
-/* ---------- 선택 & 하이라이트 ---------- */
+/* ---------- 선택 = 집중 모드 진입 ---------- */
 function select(id){
   selected = id;
   const u = byId[id];
-  document.querySelectorAll('.st').forEach(b=>{
-    b.className = baseCls(b);
-    const bid = b.dataset.id;
-    if(bid===id) b.classList.add('sel');
-    else if(u.prev.includes(bid)) b.classList.add('prev');
-    else if(u.next.includes(bid)) b.classList.add('next');
-    else if(u.related.includes(bid)) b.classList.add('rel');
-    else b.classList.add('dim');
-  });
-  renderPanel(u);
-  document.getElementById('panel').classList.add('open');
-  document.getElementById('panel').scrollTop = 0;
-  const el = document.querySelector(`.st[data-id="${id}"]`);
-  if(el) el.scrollIntoView({block:'nearest', inline:'nearest', behavior:'smooth'});
+  document.body.classList.add('focus');
+  document.getElementById('focusView').hidden = false;
+  document.getElementById('wires').innerHTML = '';
+  renderLineage(u);
+  renderBrief(u);
+  document.getElementById('briefWrap').scrollTop = 0;
+  document.getElementById('lineage').scrollTop = 0;
   if((location.hash||'') !== '#u='+id) history.replaceState(null, '', '#u='+id);
-  requestAnimationFrame(drawWires);
 }
 function clearSel(){
   selected = null;
+  document.body.classList.remove('focus');
+  document.getElementById('focusView').hidden = true;
   document.querySelectorAll('.st').forEach(b=>b.className=baseCls(b));
   document.getElementById('wires').innerHTML='';
-  renderWelcome();
-  document.getElementById('panel').classList.remove('open');
+  if(location.hash) history.replaceState(null, '', location.pathname + location.search);
+}
+/* 계보 레일: 선수(위) → 현재 → 후속(아래), 순차 애니메이션 */
+function renderLineage(u){
+  const a = AREA_BY[u.area];
+  let i = 0;
+  const dl = () => `animation-delay:${(i++) * 55}ms`;
+  const card = (id, cls) => {
+    const t = byId[id];
+    return `<button class="lnCard ${cls}" style="${dl()}" onclick="select('${id}')">
+      <small>${GRADE_LABEL[t.grade]}</small><b>${esc(t.title)}</b></button>`;
+  };
+  let h = `<button class="lnBack" onclick="clearSel()">← 지도로 돌아가기</button>`;
+  if(u.prev.length){
+    h += `<div class="lnLabel">↑ 학생들은 여기서 배우고 옵니다</div>`
+       + u.prev.map(id=>card(id,'p')).join('')
+       + `<div class="lnArrow" style="${dl()}">↓</div>`;
+  } else {
+    h += `<div class="lnLabel">시작점</div><div class="lnNone">⭐ 이 개념을 처음 배우는 단원입니다. 학생의 일상 경험에서 출발하세요.</div>`;
+  }
+  h += `<button class="lnCard cur" style="--c:${a.color};${dl()}"><small>${GRADE_LABEL[u.grade]} · 지금 보는 단원</small><b>${esc(u.title)}</b></button>`;
+  if(u.next.length){
+    h += `<div class="lnArrow" style="${dl()}">↓</div>`
+       + `<div class="lnLabel">이후 여기로 이어집니다</div>`
+       + u.next.map(id=>card(id,'n')).join('');
+  } else {
+    h += `<div class="lnNone" style="margin-top:8px">이 단원에서 이어지는 후속 단원이 교육과정에 명시되어 있지 않습니다.</div>`;
+  }
+  if(u.related.length){
+    h += `<div class="lnLabel" style="margin-top:14px">≈ 같은 시기에 함께 보면 좋은 단원</div>`
+       + u.related.map(id=>card(id,'r')).join('');
+  }
+  document.getElementById('lineage').innerHTML = h;
+}
+function renderBrief(u){ renderPanel(u); }
+// 이 단원 진단 문항에 담긴 오개념
+function unitMiscons(uid){
+  const it = ITEMS[uid];
+  if(!it || !it.diag) return [];
+  return it.diag.items.filter(q=>q.miscon).map(q=>({checks:q.checks||'', text:q.miscon}));
 }
 
 /* ---------- 연결선 ---------- */
 function drawWires(){
   const svg = document.getElementById('wires');
   svg.innerHTML='';
-  if(!selected) return;
+  if(!selected || document.body.classList.contains('focus')) return;
   const inner = document.getElementById('mapInner').getBoundingClientRect();
   svg.setAttribute('viewBox', `0 0 ${inner.width} ${inner.height}`);
   const u = byId[selected];
@@ -603,7 +713,6 @@ function renderPanel(u){
   const codes = u.standards.map(s=>s.code);
   const range = codes.length ? `[${codes[0]}] ~ [${codes[codes.length-1]}] · 성취기준 ${codes.length}개` : '';
   let h = `<div class="pTop">
-    <button id="pClose" onclick="clearSel()">✕</button>
     <div class="chips">
       <span class="chip" style="background:${a.color}">${a.name}</span>
       <span class="chip gr">${GRADE_LABEL[u.grade]}</span>
@@ -628,26 +737,26 @@ function renderPanel(u){
     </div>`}
   </div>`;
 
-  if(simple){ document.getElementById('panel').innerHTML = h + renderSimple(u, a); return; }
+  if(simple){ document.getElementById('brief').innerHTML = h + briefSimple(u, a); return; }
 
-  h += `<section class="blk d-only" id="sec-std" style="--ac:${a.color}"><h3>성취기준</h3>` +
+  h += `<section class="blk d-only brAnim" id="sec-std" style="--ac:${a.color}"><h3>성취기준</h3>` +
     u.standards.map(s=>`<div class="std"><span class="code">${s.code}</span><p>${esc(s.text)}</p></div>`).join('') + `</section>`;
 
   if(u.haeseol.length){
-    h += `<section class="blk d-only" id="sec-hae" style="--ac:${a.color}"><h3>성취기준 해설</h3><details><summary>해설 ${u.haeseol.length}개</summary><ul>` +
+    h += `<section class="blk d-only brAnim" id="sec-hae" style="--ac:${a.color}"><h3>성취기준 해설</h3><details><summary>해설 ${u.haeseol.length}개</summary><ul>` +
       u.haeseol.map(x=>`<li>${x.code?`<span class="code">[${x.code}]</span> `:''}${esc(x.text)}</li>`).join('') + `</ul></details></section>`;
   }
   if(u.goryeo.length){
-    h += `<section class="blk d-only" style="--ac:${a.color}"><h3>성취기준 적용 시 고려사항</h3><details><summary>고려사항 ${u.goryeo.length}개</summary><ul>` +
+    h += `<section class="blk d-only brAnim" style="--ac:${a.color}"><h3>성취기준 적용 시 고려사항</h3><details><summary>고려사항 ${u.goryeo.length}개</summary><ul>` +
       u.goryeo.map(x=>`<li${x.includes('연계')? ' class="linkline"':''}>${esc(x)}</li>`).join('') + `</ul></details></section>`;
   }
   if(u.tamgu.length){
-    h += `<section class="blk d-only" style="--ac:${a.color}"><h3>탐구 활동 예시</h3><div class="tchips">` +
+    h += `<section class="blk d-only brAnim" style="--ac:${a.color}"><h3>탐구 활동 예시</h3><div class="tchips">` +
       u.tamgu.map(t=>`<span>🔬 ${esc(t)}</span>`).join('') + `</div></section>`;
   }
 
   // 배움의 흐름
-  h += `<section class="blk d-only" id="sec-flow" style="--ac:${a.color}"><h3>배움의 흐름 (나선 연계)</h3><div class="flow">`;
+  h += `<section class="blk d-only brAnim" id="sec-flow" style="--ac:${a.color}"><h3>배움의 흐름 (나선 연계)</h3><div class="flow">`;
   if(u.prev.length){
     h += `<div class="fgroup">` + u.prev.map(id=>fcard(id,'p')).join('') + `</div><div class="arrow">↓ 선수 학습을 딛고</div>`;
   } else {
@@ -664,7 +773,7 @@ function renderPanel(u){
 
   const elect = u.electives.filter(e=>!e.replace(/\s/g,'').startsWith('통합과학'));
   if(elect.length){
-    h += `<section class="blk d-only" style="--ac:${a.color}"><h3>진로 연계 (고교 선택과목)</h3><div class="tchips">` +
+    h += `<section class="blk d-only brAnim" style="--ac:${a.color}"><h3>진로 연계 (고교 선택과목)</h3><div class="tchips">` +
       elect.map(e=>`<span>🎓 ${esc(e)}</span>`).join('') +
       `</div><div class="fnote">"이 단원이 재미있었다면?" — 고교학점제 과목 선택 상담에 활용하세요.</div></section>`;
   }
@@ -673,7 +782,7 @@ function renderPanel(u){
 
   h += renderItems(u, a);
 
-  h += `<section class="blk d-only" style="--ac:${a.color}"><h3>AI 문항 도우미 (직접 생성)</h3>
+  h += `<section class="blk d-only brAnim" style="--ac:${a.color}"><h3>AI 문항 도우미 (직접 생성)</h3>
     <div class="ai">
       <button class="diag" onclick="copyPrompt('diag')">🩺 진단평가 프롬프트 복사</button>
       <button class="form" onclick="copyPrompt('form')">📝 형성평가 프롬프트 복사</button>
@@ -681,9 +790,72 @@ function renderPanel(u){
     <div class="ainote">위 예시 문항과 <b>다른 문항</b>이 더 필요하거나, 우리 반 수준에 맞게 바꾸고 싶을 때 사용하세요.
     진단평가 = 선수 학습 단원의 성취기준을 자동으로 묶어 생성 · 형성평가 = 해설의 범위 제한을 반영한 수준별 생성.</div></section>`;
 
-  document.getElementById('panel').innerHTML = h;
+  document.getElementById('brief').innerHTML = h;
 }
-/* ---------- 간단히 보기 ---------- */
+/* ---------- 간단히 보기 (집중 모드 · 넓은 카드) ---------- */
+function briefSimple(u, a){
+  const L = LEVELS[u.id];
+  let h = '';
+
+  // 1) 한눈에 — 이 단원의 도달 지점 (영역별 성취수준 A)
+  const big = L && L.area && L.area.A && L.area.A['지식·이해'];
+  if(big){
+    h += `<div class="bigIdea brAnim" style="--ac:${a.color}">
+      <h4>한눈에 — 이 단원을 마치면 학생은</h4><p>${big}</p></div>`;
+  }
+
+  h += `<div class="bGrid brAnim" style="animation-delay:60ms">`;
+
+  // 2) 여기까지만
+  const lim = u.limits||[], foc = u.focus||[], gui = u.guide||[];
+  if(lim.length){
+    h += `<div class="bCard"><h4>⚠️ 여기까지만 <span class="cnt">교육과정이 정한 범위</span></h4>
+      <ul class="limitBox">${lim.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  } else if(foc.length){
+    h += `<div class="bCard"><h4>◎ 무엇에 중점을 둘까</h4>
+      <ul class="limitBox focusBox">${foc.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  } else if(gui.length){
+    h += `<div class="bCard"><h4>📖 지도 시 유의점</h4>
+      <ul class="limitBox focusBox">${gui.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`;
+  }
+
+  // 3) 도달 기준 (성취수준 C)
+  if(L && L.area && L.area.C && L.area.C['지식·이해']){
+    h += `<div class="bCard"><h4>🎯 이 정도면 도달 <span class="cnt">성취수준 C · 보통</span></h4>
+      <div class="goalBox">${L.area.C['지식·이해']}</div></div>`;
+  }
+
+  // 4) 자주 나오는 오개념
+  const mis = unitMiscons(u.id);
+  if(mis.length){
+    h += `<div class="bCard"><h4>🧠 학생이 갖고 들어오는 오개념 <span class="cnt">${mis.length}개 · 수업 전 확인용</span></h4>
+      <ul class="misList">${mis.map(m=>`<li>${m.checks?`<b>${esc(m.checks)}</b> — `:''}${m.text}</li>`).join('')}</ul></div>`;
+  }
+
+  // 5) 탐구 활동
+  if(u.tamgu.length){
+    h += `<div class="bCard"><h4>🔬 교육과정 제시 탐구 활동</h4><div class="tchips">` +
+      u.tamgu.map(t=>`<span>${esc(t)}</span>`).join('') + `</div></div>`;
+  }
+
+  // 6) 성취기준 (전폭)
+  h += `<div class="bCard full"><h4>✅ 성취기준 <span class="cnt">${u.standards.length}개 · 누르면 전문</span></h4>` +
+    u.standards.map(s=>`<div class="sStd" style="--ac:${a.color}"
+      onclick="this.querySelector('span.t').textContent=${JSON.stringify(s.text)}">
+      <span class="qcode">${s.code}</span><span class="t">${esc(briefStd(s.text))}</span></div>`).join('') + `</div>`;
+
+  // 7) 수업 준비 바로가기 (전폭)
+  const it = ITEMS[u.id];
+  h += `<div class="bCard full"><h4>수업 준비</h4><div class="qtools">
+    ${it?`<button onclick="setMode(false);setTimeout(()=>jump('sec-q'),80)">🩺 진단 ${it.diag.items.length}문항 · 📝 형성 ${it.form.items.length}문항</button>`:''}
+    ${L?`<button onclick="setMode(false);setTimeout(()=>jump('sec-lv'),80)">📊 성취수준 A~E</button>`:''}
+    <button onclick="setMode(false)">📖 전체 자세히 보기</button>
+  </div></div>`;
+
+  return h + `</div>`;
+}
+
+/* ---------- 간단히 보기 (구버전 · 좁은 패널용) ---------- */
 // 성취기준을 첫 절까지만 잘라 한 줄로 (연결어미 뒤 쉼표에서 자름)
 function briefStd(t){
   const parts = t.split(/(?<=[고며서])\s*,\s*/);
@@ -798,11 +970,11 @@ function copyMisc(){
 function renderLevels(u, a){
   const L = LEVELS[u.id];
   if(!L){
-    return `<section class="blk d-only" id="sec-lv" style="--ac:${a.color}"><h3>성취수준</h3>
+    return `<section class="blk d-only brAnim" id="sec-lv" style="--ac:${a.color}"><h3>성취수준</h3>
       <div class="notice">초등학교는 국가 수준의 <b>성취기준별 성취수준</b>이 개발·보급되지 않아 표시할 자료가 없습니다.
       (중학교·고등학교 단원에는 A~E 5수준이 들어 있습니다.)</div></section>`;
   }
-  let h = `<section class="blk lvblk d-only" id="sec-lv" style="--ac:${a.color}"><h3>성취수준 <span style="font-weight:400;color:var(--sub);font-size:12px">· KICE 국가 기준 A~E</span></h3>`;
+  let h = `<section class="blk lvblk d-only brAnim" id="sec-lv" style="--ac:${a.color}"><h3>성취수준 <span style="font-weight:400;color:var(--sub);font-size:12px">· KICE 국가 기준 A~E</span></h3>`;
 
   if(L.area){
     h += `<div class="qsrc">📌 <b>영역(단원) 단위</b> 성취수준 — 학기말 종합 판정·평가계획 기술용</div>`;
@@ -866,13 +1038,13 @@ function copyLevels(){
 function renderItems(u, a){
   const it = ITEMS[u.id];
   if(!it){
-    return `<section class="blk d-only" id="sec-q" style="--ac:${a.color}"><h3>예시 문항</h3>
+    return `<section class="blk d-only brAnim" id="sec-q" style="--ac:${a.color}"><h3>예시 문항</h3>
       <div class="notice">이 단원의 <b>미리 만들어 둔 예시 문항</b>은 아직 준비 중입니다.
       아래 <b>AI 문항 도우미</b> 버튼으로 지금 바로 생성할 수 있어요.</div></section>`;
   }
   let h = '';
   if(it.diag){
-    h += `<section class="blk d-only" id="sec-q" style="--ac:${a.color}"><h3>🩺 진단평가 예시 문항 <span style="font-weight:400;color:var(--sub);font-size:12px">· 수업 전 선수학습 확인</span></h3>
+    h += `<section class="blk d-only brAnim" id="sec-q" style="--ac:${a.color}"><h3>🩺 진단평가 예시 문항 <span style="font-weight:400;color:var(--sub);font-size:12px">· 수업 전 선수학습 확인</span></h3>
       <div class="qsrc">📌 출제 근거: ${it.diag.from}</div>` +
       it.diag.items.map((q,i)=>qCard(q, i+1)).join('') +
       `<div class="qtools">
@@ -881,7 +1053,7 @@ function renderItems(u, a){
       </div></section>`;
   }
   if(it.form){
-    h += `<section class="blk d-only" style="--ac:${a.color}"><h3>📝 형성평가 예시 문항 <span style="font-weight:400;color:var(--sub);font-size:12px">· 수준별(하·중·상)</span></h3>` +
+    h += `<section class="blk d-only brAnim" style="--ac:${a.color}"><h3>📝 형성평가 예시 문항 <span style="font-weight:400;color:var(--sub);font-size:12px">· 수준별(하·중·상)</span></h3>` +
       it.form.items.map((q,i)=>qCard(q, i+1)).join('') +
       `<div class="qtools">
         <button onclick="copyItems('form')">📋 문항 복사</button>
@@ -934,26 +1106,16 @@ function fcard(id, cls){
 function renderWelcome(){
   const nStd = DATA.units.reduce((s,u)=>s+u.standards.length,0);
   const nQ = Object.values(ITEMS).reduce((s,it)=>s+(it.diag?it.diag.items.length:0)+(it.form?it.form.items.length:0),0);
-  const nQU = Object.keys(ITEMS).length;
-  document.getElementById('panel').innerHTML = `<div class="empty">
-    <div class="big">🌀</div>
-    <b style="font-size:16px;color:#343a40">단원(역)을 클릭해 보세요</b><br>
-    성취기준 · 해설 · 고려사항 · 선수/후속 연계 ·<br>AI 진단/형성평가 프롬프트가 한 번에 나옵니다.
-    <div class="stats">
-      <div><b>${DATA.units.length}</b>단원</div>
-      <div><b>${nStd}</b>성취기준</div>
-      <div><b>${nQ}</b>예시 문항</div>
-    </div>
-    <div style="font-size:12.5px; text-align:left; background:var(--bg); border-radius:12px; padding:12px 16px; line-height:2">
-      <span style="color:#f59f00">●</span> 노란 테두리 = 선수 학습 (이전에 배움)<br>
-      <span style="color:#339af0">●</span> 파란 테두리 = 후속 연계 (앞으로 배움)<br>
-      <span style="color:#adb5bd">◌</span> 점선 = 같은 시기 연계 단원<br>
-      <span style="color:#2f9e44">✓</span> 초록 체크 = <b>예시 문항이 들어 있는 단원</b> (${nQU}개)<br>
-      🎯 <b>영역 이름</b>이나 <b>학년 제목</b>을 누르면 그것만 보입니다<br>
-      ⚠️ 위 <b>오개념</b> 버튼 = 전 단원 오개념 ${miscList().length}개 모아보기<br>
-      🔍 검색창: 단원명·코드·키워드로 바로 찾기
-    </div>
-  </div>`;
+  document.getElementById('hint').innerHTML =
+    `<span><b>단원을 클릭</b>하면 그 단원만 남고 계보·브리핑이 열립니다</span>
+     <span class="sep">|</span>
+     <span><b>영역 이름</b>·<b>학년 제목</b>을 누르면 그것만 보입니다</span>
+     <div class="stats" style="margin-left:auto">
+       <div><b>${DATA.units.length}</b> 단원</div>
+       <div><b>${nStd}</b> 성취기준</div>
+       <div><b>${nQ}</b> 예시문항</div>
+       <div><b>${miscList().length}</b> 오개념</div>
+     </div>`;
 }
 
 /* ---------- AI 프롬프트 ---------- */
@@ -1017,6 +1179,7 @@ function toast(msg){
 /* ---------- 검색 ---------- */
 const qEl = document.getElementById('q');
 qEl.addEventListener('input', ()=>{
+  if(document.body.classList.contains('focus')) clearSel();
   const q = qEl.value.trim().toLowerCase().replace(/\s+/g,'');
   const cnt = document.getElementById('qCount');
   if(!q){
