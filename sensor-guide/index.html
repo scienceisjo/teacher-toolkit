@@ -496,8 +496,8 @@ footer#app-credit b{color:var(--ink);font-weight:600}
         <details class="d p"><summary>모둠 수만큼 살 수 있는 유일한 가격대</summary>
           <div class="dbody">센서 단가가 <b>1.5만~15.4만원</b>으로 타사 무선의 1/3~1/10 수준입니다. 7모둠 옴의 법칙을 예로 들면 유선 보드 7개+전압 7+전류 7이 <b>66만 5천원</b>인데, 같은 구성을 사이언스큐브 무선으로 하면 약 262만원입니다. 모둠별 실습이 목표라면 사실상 선택지가 이것뿐인 경우가 많습니다.</div>
         </details>
-        <details class="d p"><summary>보드 1개에 센서 8~9개 동시 연결</summary>
-          <div class="dbody">유선 메인보드에 <b>D0~D4 · A0 · A1 · I2C(2채널) · UART</b> 포트가 있어 센서를 여러 개 한 번에 꽂습니다. 실제 사례집에서 <b>수권의 층상구조는 온도센서 5개, 단열재 비교는 4개</b>를 한 보드에 연결합니다. 무선 방식으로는 보드를 5개 쌓아야 하는 실험이 한 보드로 끝납니다.</div>
+        <details class="d p"><summary>보드 1개에 센서 여러 개 동시 연결 (포트 12개)</summary>
+          <div class="dbody">유선 메인보드에 <b>D0~D4 · A0~A4 · I2C · UART</b> 포트가 있어 센서를 여러 개 한 번에 꽂습니다. 실제 사례집에서 <b>수권의 층상구조는 온도센서 5개, 단열재 비교는 4개</b>를 한 보드에 연결합니다. 무선 방식으로는 보드를 5개 쌓아야 하는 실험이 한 보드로 끝납니다.</div>
         </details>
         <details class="d p"><summary>SD카드로 케이블 없이 독립 기록</summary>
           <div class="dbody">메인보드에 SD카드와 배터리를 끼우면 노트북 연결 없이 <b>보드 혼자 데이터를 기록</b>합니다. 감압용기 안처럼 케이블을 뺄 수 없는 밀폐 공간에 보드째 넣을 수 있습니다. 다만 실험 중 실시간 그래프는 볼 수 없고, 끝난 뒤 데이터를 꺼내 봅니다.</div>
@@ -750,14 +750,14 @@ footer#app-credit b{color:var(--ink);font-weight:600}
           <thead><tr><th>포트</th><th class="num">개수</th><th>연결하는 센서</th></tr></thead>
           <tbody>
             <tr><td class="name">D0 ~ D4 <span class="chip">디지털</span></td><td class="num">5</td><td style="white-space:normal">온도·수중온도·접촉온도·고온·초음파·자기장·소리·DIY-B 등</td></tr>
-            <tr><td class="name">A0 · A1 <span class="chip">아날로그</span></td><td class="num">2</td><td style="white-space:normal">전압·공기압·밝기·DIY-A 등</td></tr>
+            <tr><td class="name">A0 ~ A4 <span class="chip">아날로그</span></td><td class="num">5</td><td style="white-space:normal">전압·공기압·밝기·DIY-A 등</td></tr>
             <tr><td class="name">I2C</td><td class="num">1</td><td style="white-space:normal">전류·이산화탄소·기압·pH·힘·자이로 등</td></tr>
             <tr><td class="name">UART</td><td class="num">1</td><td style="white-space:normal"><b>무게 센서 전용</b></td></tr>
           </tbody>
         </table>
       </div>
       <p style="font-size:13.2px;margin:0 0 10px;line-height:1.75">
-        단순 합계로는 최대 9개지만, 실제 수업에서 확인된 <b>동시 연결 사례</b>는 이렇습니다.
+        단순 합계로는 최대 12개지만, 실제 수업에서 확인된 <b>동시 연결 사례</b>는 이렇습니다.
       </p>
       <div style="display:grid;gap:4px;font-size:13px;margin-bottom:12px">
         <div>· 수권의 층상 구조 — <b>온도 센서 5개</b>를 D0~D4에 한꺼번에</div>
@@ -769,7 +769,7 @@ footer#app-credit b{color:var(--ink);font-weight:600}
       <div class="note" style="margin:0">
         <b>주의할 점 세 가지</b><br>
         · <b>UART는 1개뿐</b>이라 무게 센서는 보드 하나에 하나만 씁니다(메인보드·미니보드 모두 동일).<br>
-        · <b>미니보드(40,000)는 포트가 3개 적고 SD카드 슬롯이 없습니다.</b> 온도 4~5개를 동시에 쓰는 실험이 막히니 2만원 아끼려다 실험이 안 됩니다.<br>
+        · <b>미니보드(40,000)는 아날로그·디지털 포트가 2개씩(A0~A1·D0~D1)이고 SD카드 슬롯이 없습니다.</b> 온도 4~5개를 동시에 쓰는 실험이 막히니 2만원 아끼려다 실험이 안 됩니다.<br>
         · <b>무선(나노)은 규칙이 다릅니다.</b> 나노보드는 <b>센서 1개당 1개</b>가 필요하고 배터리도 함께 사야 합니다. 옴의 법칙을 무선으로 하면 모둠당 나노보드가 2개입니다.
       </div>
     </div>
@@ -779,8 +779,8 @@ footer#app-credit b{color:var(--ink);font-weight:600}
       <table>
         <thead><tr><th>품목</th><th>가격</th><th>비고</th></tr></thead>
         <tbody>
-          <tr><td class="name">이지메이커 메인보드</td><td class="num">60,000</td><td style="white-space:normal">D0~D4·A0·A1·I2C·UART / SD카드 슬롯 / 전원 스위치</td></tr>
-          <tr><td class="name">이지메이커 미니보드</td><td class="num">40,000</td><td style="white-space:normal">포트 3개 적음 · SD카드 없음</td></tr>
+          <tr><td class="name">이지메이커 메인보드</td><td class="num">60,000</td><td style="white-space:normal">D0~D4·A0~A4·I2C·UART / SD카드 슬롯 / 전원 스위치</td></tr>
+          <tr><td class="name">이지메이커 미니보드</td><td class="num">40,000</td><td style="white-space:normal">D0~D1·A0~A1·I2C·UART · SD카드 없음</td></tr>
           <tr><td class="name">이지메이커 나노보드</td><td class="num">55,000</td><td style="white-space:normal">무선 · <b>보드 1개당 센서 1개</b> · 정가 66,000원의 할인 판매가</td></tr>
           <tr><td class="name">이지메이커 일체형 배터리</td><td class="num">11,000</td><td style="white-space:normal">보드와 1:1 필요 · 정가 15,000원의 할인 판매가</td></tr>
           <tr><td class="name">사이언스큐브 무선 센서</td><td class="num">—</td><td style="white-space:normal"><b>보드·인터페이스 불필요</b> — 전원만 켜면 블루투스 연결</td></tr>
@@ -1184,7 +1184,7 @@ footer#app-credit b{color:var(--ink);font-weight:600}
     <table style="min-width:520px">
       <thead><tr><th style="width:96px">날짜</th><th>변경 내용</th></tr></thead>
       <tbody>
-        <tr><td class="name">2026-09-25</td><td style="white-space:normal"><b>가격 전체 재점검</b> — 이지메이커 공식몰, 한국과학(버니어) 74개 품목, 사이언스큐브·파스코 2026 카탈로그와 한 줄씩 대조했습니다. 이지메이커 <b>기압 센서 30,000→80,000원(나노 85,000→135,000원)</b> 정정, 이지메이커 <b>힘·가속도 센서(88,000원)</b> 추가, 버니어 소리·심박·열전대·전도도·미세먼지·염도·용존산소·방사선 <b>8종 가격</b> 추가. 파스코 중학 실험 수(25→26종+심화 3종), 가격 배수 서술, 최저가 표시 색 안내를 바로잡고, 크롬북 관련 서술을 네 업체 웹판 기준으로 고쳤습니다.<br><b>고등학교 확장</b> — 학교급 선택(중학교·고등학교·중·고 모두, 주소 <b>?lv=h</b>로 바로 열기), 고등 수업 <span id="hsCountLog">47</span>건(별책 9 탐구 활동·교과서 수록표·파스코 고등 실험 페이지·버니어 영상 연결), 고등 센서 10종(무선 카트·분광계·색도·유도 전류·전하·ORP·방울계수기·심전도·혈압·폐활량), 고등 실험 영상 17편. 같은 제품 겸용(전압 센서로 유도 전류 측정)과 딸린 품목(파스코 ORP 프로브 + pH 센서)을 구매 계획이 자동으로 계산합니다</td></tr>
+        <tr><td class="name">2026-09-25</td><td style="white-space:normal"><b>가격 전체 재점검</b> — 이지메이커 공식몰, 한국과학(버니어) 74개 품목, 사이언스큐브·파스코 2026 카탈로그와 한 줄씩 대조했습니다. 이지메이커 <b>기압 센서 30,000→80,000원(나노 85,000→135,000원)</b> 정정, 이지메이커 <b>힘·가속도 센서(88,000원)</b> 추가, 버니어 소리·심박·열전대·전도도·미세먼지·염도·용존산소·방사선 <b>8종 가격</b> 추가. 이지메이커 메인보드 아날로그 포트(A0·A1 2개 → <b>A0~A4 5개</b>, 사례집 원문 기준), 파스코 중학 실험 수(25→26종+심화 3종), 가격 배수 서술, 최저가 표시 색 안내를 바로잡고, 크롬북 관련 서술을 네 업체 웹판 기준으로 고쳤습니다.<br><b>고등학교 확장</b> — 학교급 선택(중학교·고등학교·중·고 모두, 주소 <b>?lv=h</b>로 바로 열기), 고등 수업 <span id="hsCountLog">47</span>건(별책 9 탐구 활동·교과서 수록표·파스코 고등 실험 페이지·버니어 영상 연결), 고등 센서 10종(무선 카트·분광계·색도·유도 전류·전하·ORP·방울계수기·심전도·혈압·폐활량), 고등 실험 영상 17편. 같은 제품 겸용(전압 센서로 유도 전류 측정)과 딸린 품목(파스코 ORP 프로브 + pH 센서)을 구매 계획이 자동으로 계산합니다</td></tr>
         <tr><td class="name">2026-09-17</td><td style="white-space:normal"><b>Apple iPhone 페이지 문법으로 재조판</b>(전폭 타일 교차·설정 칩·하단 고정 바·다크 권고 타일). <b>MBL 센서 연수 허브 자료</b>(정산서 예시 xlsx·결과보고서 붙임 hwpx/md·절 링크 8개) 추가. 버니어 매뉴얼 평가를 <b>충실</b>로 정정하고 한국과학 채널 <b>한국어 영상 41편</b> 모음 신설. 구매 계획에 <b>한 업체로만</b> 프리셋 4종과 <b>정산서 양식 CSV 내려받기</b> 추가. 중복 구매 권고를 최상단으로, 고예산 기준에 버니어 추가, 영재·연구 항목에 이지메이커(탐구 자유도) 병기. 제작자 표기</td></tr>
         <tr><td class="name">2026-08-25</td><td style="white-space:normal"><b>이지메이커 보드 구매 안내</b> 추가(센서만 사면 안 되는 이유·포트별 동시 연결 수). <b>사이언스큐브 유선 라인 제외</b>(인터페이스 별도 구매 필요). 업데이트 이력 신설</td></tr>
         <tr><td class="name">2026-08-19</td><td style="white-space:normal">클래스보드 『기초·측정 방법』 센서 19종 쪽수, 사이언스큐브 <b>S2B 물품번호</b> 23종, 사례집 <b>신판(따라잡기·245쪽)</b> 쪽수 병기. 자외선 항목 정정(조도센서 겸용)</td></tr>
@@ -2335,7 +2335,7 @@ function downloadSettlementCSV(){
       spec=sv+(model?' ('+model+')':'')+(it.line.includes('나노')?' — 나노보드 연결형':it.line.includes('유선')&&it.v==='ez'?' — 메인보드 연결형':'');
       memo=[it.line, s2b?'S2B '+s2b:''].filter(Boolean).join(' · ');
     } else {
-      spec = it.ek==='bd_main' ? 'EZON·클래스보드로 센서 데이터를 수집하는 메인보드 (D0~D4·A0·A1·I2C·UART)'
+      spec = it.ek==='bd_main' ? 'EZON·클래스보드로 센서 데이터를 수집하는 메인보드 (D0~D4·A0~A4·I2C·UART)'
            : it.ek==='bd_nano' ? '무선 나노 센서 구동용 보드 (센서 1개당 1개)'
            : it.ek==='bd_batt' ? '나노보드용 일체형 배터리' : '';
       memo='이지메이커';
